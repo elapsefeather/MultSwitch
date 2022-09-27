@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">MultSwitch</string>
+
+    <string-array name="tab1">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>一</item>
+        <item>二</item>
+        <item>三</item>
+    </string-array>
 </resources>
