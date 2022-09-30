@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="MultSwitch">
         <attr name="strokeRadius" format="dimension" />
-        <attr name="strokeWidth" />
+        <attr name="strokeWidth" format="dimension" />
         <attr name="indicatorWidth" format="dimension" />
         <attr name="indicatorHeight" format="dimension" />
         <attr name="textSize" format="dimension" />
