@@ -1,14 +1,19 @@
 # MultSwitch
+
 [![](https://jitpack.io/v/elapsefeather/MultSwitch.svg)](https://jitpack.io/#elapsefeather/MultSwitch)
+自定義滑動樣式選單 SwtichBtn
 
 ## sample
+
 <img src="https://github.com/elapsefeather/MultSwitch/blob/c37dddd442e8634a12682bc03b5fb854f7e9561c/screenshots/multSwitch.gif" height="500">
 
-
 ## Setup
-The easiest way to add the **MultSwitch** library to your project is by adding it as a dependency to your build.gradle
+
+The easiest way to add the **MultSwitch** library to your project is by adding it as a dependency to
+your build.gradle
 
 **Step 1.** Add the JitPack repository to your build file
+
 ```gradle
 allprojects {
     repositories {
@@ -18,6 +23,7 @@ allprojects {
 ```
 
 **Step 2.** Add the dependency
+
 ```gradle
 dependencies {
     implementation 'com.github.elapsefeather:MultSwitch:1.0.0'
@@ -25,6 +31,7 @@ dependencies {
 ```
 
 ## parameter
+
 | parameter             | parameter type    | effect            |
 | -------------         |-------------      |-------------      |
 | strokeRadius          | dimension         | 選項圓角          |
@@ -43,6 +50,7 @@ dependencies {
 | mutiLine              | boolean           | 選項是否自動換行  |
 
 ## Usage
+
 ```
     <com.elapsefeather.lib.MultSwitch
         android:id="@+id/multSwitch4"
@@ -63,4 +71,7 @@ dependencies {
         app:unselectedTextColor="#E91E63" />
 ```
 
+## Version History
 
+> ### v1.0.0(2022/10/01)
+> - new project.
