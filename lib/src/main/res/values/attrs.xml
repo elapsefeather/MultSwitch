@@ -5,6 +5,10 @@
         <attr name="strokeWidth" format="dimension" />                  <!--    選項寬度    -->
         <attr name="indicatorWidth" format="dimension" />               <!--    指示器寬度    -->
         <attr name="indicatorHeight" format="dimension" />              <!--    指示器高度    -->
+        <attr name="tabWidth" format="enum" >                           <!--    tab寬度    -->
+            <enum name="max" value="0" />                               <!--    最大的項目    -->
+            <enum name="auto" value="1" />                              <!--    最適項目寬度    -->
+        </attr>
         <attr name="textSize" format="dimension" />                     <!--    選項字體大小    -->
         <attr name="selectedTab" format="integer" />                    <!--    預設選項    -->
         <attr name="selectedColor" format="color|reference" />          <!--    選中色    -->

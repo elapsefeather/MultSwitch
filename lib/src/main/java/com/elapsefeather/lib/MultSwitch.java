@@ -38,6 +38,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
     private static final String FONTS_DIR = "fonts/";
     private static final BlockStyle BLOCK_STYLE = BlockStyle.ORIGINAL;
     private static final boolean MUTI_LINE = false;
+    private static final TabWidth TAB_WIDTH = TabWidth.AUTO;
 
     public enum BlockStyle {
         ORIGINAL(0),
@@ -58,6 +59,30 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
 
         public static BlockStyle fromId(int id) {
             for (BlockStyle type : values()) {
+                if (type.getValue() == id) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
+
+    public enum TabWidth {
+        MAX(0),
+        AUTO(1);
+
+        private int mValue;
+
+        TabWidth(int _value) {
+            this.mValue = _value;
+        }
+
+        public int getValue() {
+            return mValue;
+        }
+
+        public static TabWidth fromId(int id) {
+            for (TabWidth type : values()) {
                 if (type.getValue() == id) {
                     return type;
                 }
@@ -92,6 +117,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
     private Typeface typeface;
     private boolean mEnable = true;
     private BlockStyle mblockStyle = BlockStyle.ROUNDED;
+    private TabWidth mTabWidth = TabWidth.AUTO;
     private boolean mMutiLine = false; // 文字太長自動換行 UI設定app:mutiLine="true"即可
 
     private float mOffset; //滑动偏移量
@@ -135,6 +161,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
         mSelectedTab = typedArray.getInteger(R.styleable.MultSwitch_selectedTab, SELECTED_TAB);
         mMutiLine = typedArray.getBoolean(R.styleable.MultSwitch_mutiLine, MUTI_LINE);
         mblockStyle = BlockStyle.fromId(typedArray.getInteger(R.styleable.MultSwitch_blockStyle, BLOCK_STYLE.getValue()));
+        mTabWidth = TabWidth.fromId(typedArray.getInteger(R.styleable.MultSwitch_tabWidth, TAB_WIDTH.getValue()));
         String mTypeface = typedArray.getString(R.styleable.MultSwitch_typeface);
         int mSwitchTabsResId = typedArray.getResourceId(R.styleable.MultSwitch_switchTabs, 0);
         if (mSwitchTabsResId != 0) {
