@@ -192,4 +192,31 @@
         app:selectedTextColor="#000"
         app:switchTabs="@array/tab1"
         app:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/label6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="isScroll"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/multSwitch8" />
+
+    <com.elapsefeather.lib.MultTabLayout
+        android:id="@+id/multSwitch9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:padding="8dp"
+        app:blockStyle="rounded"
+        app:isScroll="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label6"
+        app:selectedColor="#9C27B0"
+        app:selectedTextColor="#fff"
+        app:strokeRadius="20dp"
+        app:switchTabs="@array/tab2"
+        app:textSize="18dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,4 +9,13 @@
         <item>二</item>
         <item>三</item>
     </string-array>
+
+    <string-array name="tab2">
+        <item>Dount</item>
+        <item>lollipop</item>
+        <item>ice cream ca</item>
+        <item>custom tab</item>
+        <item>indicator thickness</item>
+        <item>indicator thickness2</item>
+    </string-array>
 </resources>
