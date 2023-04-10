@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="MultSwitch">
-        <attr name="strokeRadius" format="dimension" />
-        <attr name="strokeWidth" format="dimension" />
-        <attr name="indicatorWidth" format="dimension" />
-        <attr name="indicatorHeight" format="dimension" />
-        <attr name="textSize" format="dimension" />
-        <attr name="selectedTab" format="integer" />
-        <attr name="selectedColor" format="color|reference" />
-        <attr name="unselectedColor" format="color|reference" />
-        <attr name="selectedTextColor" format="color|reference" />
-        <attr name="unselectedTextColor" format="color|reference" />
-        <attr name="switchTabs" format="reference" />
-        <attr name="typeface" format="string" />
-        <attr name="blockStyle">
-            <enum name="original" value="0" />
-            <enum name="brim" value="1" />
-            <enum name="rounded" value="2" />
-            <enum name="bottomLine" value="3" />
-            <enum name="bottomShortLine" value="4" />
+        <attr name="strokeRadius" format="dimension" />                 <!--    選項圓角    -->
+        <attr name="strokeWidth" format="dimension" />                  <!--    選項寬度    -->
+        <attr name="indicatorWidth" format="dimension" />               <!--    指示器寬度    -->
+        <attr name="indicatorHeight" format="dimension" />              <!--    指示器高度    -->
+        <attr name="textSize" format="dimension" />                     <!--    選項字體大小    -->
+        <attr name="selectedTab" format="integer" />                    <!--    預設選項    -->
+        <attr name="selectedColor" format="color|reference" />          <!--    選中色    -->
+        <attr name="unselectedColor" format="color|reference" />        <!--    未選中色    -->
+        <attr name="selectedTextColor" format="color|reference" />      <!--    選中字體色    -->
+        <attr name="unselectedTextColor" format="color|reference" />    <!--    未選中字體色    -->
+        <attr name="switchTabs" format="reference" />                   <!--    選項列表    -->
+        <attr name="typeface" format="string" />                        <!--    字體字型    -->
+        <attr name="blockStyle">                                        <!--    可選樣式    -->
+            <enum name="original" value="0" />                          <!--    無指示器    -->
+            <enum name="brim" value="1" />                              <!--    左右項目圓角    -->
+            <enum name="rounded" value="2" />                           <!--    選項圓角    -->
+            <enum name="bottomLine" value="3" />                        <!--    底部指示器    -->
+            <enum name="bottomShortLine" value="4" />                   <!--    短底部指示器    -->
         </attr>
-        <attr name="disableColor" format="color|reference" />
-        <attr name="disableTextColor" format="color|reference" />
-        <attr name="mutiLine" format="boolean" />
+        <attr name="disableColor" format="color|reference" />           <!--    禁用色    -->
+        <attr name="disableTextColor" format="color|reference" />       <!--    禁用字體色    -->
+        <attr name="mutiLine" format="boolean" />                       <!--    選項是否自動換行    -->
+        <attr name="isScroll" format="boolean" />                       <!--    是否可滾動    -->
     </declare-styleable>
 </resources>
