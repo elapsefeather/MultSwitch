@@ -32,6 +32,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/label"
             app:switchTabs="@array/tab1"
+            app:tabWidth="max"
             app:textSize="18dp" />
 
         <TextView
@@ -59,6 +60,7 @@
             app:selectedTextColor="#fff"
             app:strokeRadius="2dp"
             app:switchTabs="@array/tab1"
+            app:tabWidth="max"
             app:textSize="18dp"
             app:unselectedColor="#B3B3B3"
             app:unselectedTextColor="#000" />
@@ -77,6 +79,7 @@
             app:selectedTextColor="#000"
             app:strokeRadius="20dp"
             app:switchTabs="@array/tab1"
+            app:tabWidth="max"
             app:textSize="18dp"
             app:unselectedColor="#D1D1D1"
             app:unselectedTextColor="#B82C00" />
@@ -96,6 +99,7 @@
             app:strokeRadius="20dp"
             app:strokeWidth="1dp"
             app:switchTabs="@array/tab1"
+            app:tabWidth="max"
             app:textSize="18dp"
             app:unselectedTextColor="#E91E63" />
 
@@ -125,6 +129,7 @@
             app:strokeRadius="20dp"
             app:strokeWidth="1dp"
             app:switchTabs="@array/tab1"
+            app:tabWidth="max"
             app:textSize="18dp"
             app:unselectedTextColor="#000" />
 
@@ -152,6 +157,7 @@
             app:selectedColor="#3F51B5"
             app:selectedTextColor="#000"
             app:switchTabs="@array/tab1"
+            app:tabWidth="max"
             app:textSize="18dp"
             app:unselectedTextColor="#000" />
 
@@ -180,6 +186,7 @@
             app:selectedTextColor="#000"
             app:strokeRadius="2dp"
             app:switchTabs="@array/tab1"
+            app:tabWidth="max"
             app:textSize="18dp"
             app:unselectedTextColor="#000" />
 
@@ -196,6 +203,7 @@
             app:selectedColor="#9C27B0"
             app:selectedTextColor="#000"
             app:switchTabs="@array/tab1"
+            app:tabWidth="max"
             app:textSize="18dp" />
 
         <TextView
@@ -241,6 +249,7 @@
             app:strokeRadius="20dp"
             app:strokeWidth="0dp"
             app:switchTabs="@array/tab2"
+            app:tabWidth="auto"
             app:textSize="18dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
