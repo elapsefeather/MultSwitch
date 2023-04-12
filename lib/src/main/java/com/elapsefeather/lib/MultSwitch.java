@@ -441,15 +441,38 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
             float x = event.getX();
+            float tabTextWidthX = 0f;
             for (int i = 0; i < mTabNum; i++) {
-                if (x > perWidth * i && x < perWidth * (i + 1)) {
-                    if (mSelectedTab == i) {
-                        return true;
-                    }
-                    mSelectedTab = i;
-                    if (onSwitchListener != null) {
-                        onSwitchListener.onSwitch(i, mTabTexts[i]);
-                    }
+                switch (mTabWidth) {
+                    case MAX:
+                    default:
+                        if (x > perWidth * i && x < perWidth * (i + 1)) {
+                            if (mSelectedTab == i) {
+                                return true;
+                            }
+                            mSelectedTab = i;
+                            if (onSwitchListener != null) {
+                                onSwitchListener.onSwitch(i, mTabTexts[i]);
+                            }
+                        }
+                        break;
+                    case AUTO:
+                        String tabText = mTabTexts[i];
+                        float tabTextWidth = mSelectedTextPaint.measureText(tabText);
+                        float tabTextWidthStart = tabTextWidthX;
+                        float tabTextWidthEnd = tabTextWidthX + (tabTextWidth + mStrokeWidth * 2 + getPaddingLeft() + getPaddingRight());
+                        if (x > tabTextWidthStart && x < tabTextWidthEnd) {
+                            Log.i("TabWidth", "tabTextWidthStart=" + tabTextWidthStart + ", tabTextWidthEnd=" + tabTextWidthEnd + ", pos=" + i);
+                            if (mSelectedTab == i) {
+                                return true;
+                            }
+                            mSelectedTab = i;
+                            if (onSwitchListener != null) {
+                                onSwitchListener.onSwitch(i, mTabTexts[i]);
+                            }
+                        }
+                        tabTextWidthX = tabTextWidthEnd;
+                        break;
                 }
             }
             invalidate();
