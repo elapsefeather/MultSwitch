@@ -319,7 +319,16 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
                 // unselected text
                 paint = mUnselectedTextPaint;
             }
-            drawText(canvas, paint, tabText, i, (int) tabTextWidth, getWidth() / mTabNum);
+            switch (mTabWidth) {
+                case MAX:
+                default:
+                    drawText(canvas, paint, tabText, 0.5f * perWidth * (2 * i + 1) - 0.5f * tabTextWidth, mHeight * 0.5f + mTextHeightOffset);
+                    break;
+                case AUTO:
+                    drawText(canvas, paint, tabText, (tabTextWidthX + getPaddingLeft()), mHeight * 0.5f + mTextHeightOffset);
+                    break;
+            }
+            tabTextWidthX += (tabTextWidth + mStrokeWidth * 2 + getPaddingLeft() + getPaddingRight());
         }
     }
 
@@ -389,18 +398,22 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
         canvas.drawPath(rightPath, mFillPaint);
     }
 
-    private void drawText(Canvas canvas, TextPaint paint, String text, int index, int textWidth, int tabWidth) {
-        // 有開啟換行且文字太長才換行 若文字太長不會換行則UI設定app:mutiLine="true"即可
-        if (mMutiLine && textWidth > tabWidth) {
-            StaticLayout layout = new StaticLayout(text, paint, tabWidth, Layout.Alignment.ALIGN_NORMAL, 1.0F, 0.0F, true);
-            canvas.save();
-            canvas.translate(0.5f * perWidth * (2 * index + 1) - 0.5f * layout.getLineWidth(0), 0);
-            layout.draw(canvas);
-            canvas.restore();
-        } else {
-            canvas.drawText(text, 0.5f * perWidth * (2 * index + 1) - 0.5f * textWidth, mHeight * 0.5f + mTextHeightOffset, paint);
-        }
+    private void drawText(Canvas canvas, TextPaint paint, String text, float x, float y) {
+        canvas.drawText(text, x, y, paint);
     }
+//
+//    private void drawText(Canvas canvas, TextPaint paint, String text, int index, int textWidth, int tabWidth) {
+//        // 有開啟換行且文字太長才換行 若文字太長不會換行則UI設定app:mutiLine="true"即可
+//        if (mMutiLine && textWidth > tabWidth) {
+//            StaticLayout layout = new StaticLayout(text, paint, tabWidth, Layout.Alignment.ALIGN_NORMAL, 1.0F, 0.0F, true);
+//            canvas.save();
+//            canvas.translate(0.5f * perWidth * (2 * index + 1) - 0.5f * layout.getLineWidth(0), 0);
+//            layout.draw(canvas);
+//            canvas.restore();
+//        } else {
+//            canvas.drawText(text, 0.5f * perWidth * (2 * index + 1) - 0.5f * textWidth, mHeight * 0.5f + mTextHeightOffset, paint);
+//        }
+//    }
 
     /**
      * called after onMeasure
