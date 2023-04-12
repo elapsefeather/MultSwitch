@@ -228,15 +228,23 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
     private int getDefaultWidth() {
         float tabTextWidth = 0f;
         int tabs = mTabTexts.length;
+        float totalTextWidth = 0f;
         for (int i = 0; i < tabs; i++) {
-            tabTextWidth = Math.max(tabTextWidth, mSelectedTextPaint.measureText(mTabTexts[i]));
+            switch (mTabWidth) {
+                case MAX:
+                default:
+                    tabTextWidth = Math.max(tabTextWidth, mSelectedTextPaint.measureText(mTabTexts[i]));
+                    totalTextWidth = tabTextWidth * tabs;
+                    break;
+                case AUTO:
+                    totalTextWidth += mSelectedTextPaint.measureText(mTabTexts[i]);
+                    break;
+            }
         }
-        float totalTextWidth = tabTextWidth * tabs;
         float totalStrokeWidth = (mStrokeWidth * tabs);
         int totalPadding = (getPaddingRight() + getPaddingLeft()) * tabs;
         return (int) (totalTextWidth + totalStrokeWidth + totalPadding);
     }
-
 
     /**
      * get expect size
