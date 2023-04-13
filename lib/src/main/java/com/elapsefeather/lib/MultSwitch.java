@@ -357,6 +357,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
                     case BRIN:
                         break;
                     case ROUNDED:
+                        drawPath(canvas, top, tabTextWidthStart, bottom, tabTextWidthEnd);
                         break;
                     case BOTTOMLINE:
                         break;
