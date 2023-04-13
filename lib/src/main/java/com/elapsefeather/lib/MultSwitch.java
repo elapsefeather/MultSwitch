@@ -14,6 +14,7 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -296,6 +297,18 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
 //            canvas.drawLine(perWidth * (i + 1), top, perWidth * (i + 1), bottom, mStrokePaint);
 //        }
         //draw tab and line
+        switch (mTabWidth) {
+            case MAX:
+            default:
+                onDrawTabWidth_Max(canvas, left, top, right, bottom);
+                break;
+            case AUTO:
+                onDrawTabWidth_Auto(canvas, left, top, right, bottom);
+                break;
+        }
+    }
+
+    private void onDrawTabWidth_Max(Canvas canvas, float left, float top, float right, float bottom) {
         for (int i = 0; i < mTabNum; i++) {
             String tabText = mTabTexts[i];
             float tabTextWidth = mSelectedTextPaint.measureText(tabText);
@@ -320,6 +333,36 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
                         drawPath(canvas, shortTop, shortLeft, bottom, shortRight);
                         break;
                 }
+                // selected text
+                paint = mSelectedTextPaint;
+            } else {
+                // unselected text
+                paint = mUnselectedTextPaint;
+            }
+            drawText(canvas, paint, tabText, 0.5f * perWidth * (2 * i + 1) - 0.5f * tabTextWidth, mHeight * 0.5f + mTextHeightOffset);
+        }
+    }
+
+    private void onDrawTabWidth_Auto(Canvas canvas, float left, float top, float right, float bottom) {
+        float tabTextWidthX = 0f;
+        for (int i = 0; i < mTabNum; i++) {
+            String tabText = mTabTexts[i];
+            float tabTextWidth = mSelectedTextPaint.measureText(tabText);
+            float tabTextWidthStart = tabTextWidthX;
+            float tabTextWidthEnd = tabTextWidthX + (tabTextWidth + mStrokeWidth * 2 + getPaddingLeft() + getPaddingRight());
+            TextPaint paint;
+            if (i == mSelectedTab) {
+//                draw selected tab
+                switch (mblockStyle) {
+                    case BRIN:
+                        break;
+                    case ROUNDED:
+                        break;
+                    case BOTTOMLINE:
+                        break;
+                    case BOTTOMSHORTLINE:
+                        break;
+                }
 
                 // selected text
                 paint = mSelectedTextPaint;
@@ -327,15 +370,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
                 // unselected text
                 paint = mUnselectedTextPaint;
             }
-            switch (mTabWidth) {
-                case MAX:
-                default:
-                    drawText(canvas, paint, tabText, 0.5f * perWidth * (2 * i + 1) - 0.5f * tabTextWidth, mHeight * 0.5f + mTextHeightOffset);
-                    break;
-                case AUTO:
-                    drawText(canvas, paint, tabText, (tabTextWidthX + getPaddingLeft()), mHeight * 0.5f + mTextHeightOffset);
-                    break;
-            }
+            drawText(canvas, paint, tabText, (tabTextWidthX + getPaddingLeft()), mHeight * 0.5f + mTextHeightOffset);
             tabTextWidthX += (tabTextWidth + mStrokeWidth * 2 + getPaddingLeft() + getPaddingRight());
         }
     }
