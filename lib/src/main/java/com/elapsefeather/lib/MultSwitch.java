@@ -288,14 +288,6 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
         float right = mWidth - mStrokeWidth * 0.5f;
         float bottom = mHeight - mStrokeWidth * 0.5f;
 
-        if (mStrokeWidth > 0) {
-            //外圍圓圈
-            canvas.drawRoundRect(new RectF(left, top, right, bottom), mStrokeRadius, mStrokeRadius, mStrokePaint);
-        }
-        //分隔線
-//        for (int i = 0; i < mTabNum - 1; i++) {
-//            canvas.drawLine(perWidth * (i + 1), top, perWidth * (i + 1), bottom, mStrokePaint);
-//        }
         //draw tab and line
         switch (mTabWidth) {
             case MAX:
@@ -340,6 +332,15 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
                 paint = mUnselectedTextPaint;
             }
             drawText(canvas, paint, tabText, 0.5f * perWidth * (2 * i + 1) - 0.5f * tabTextWidth, mHeight * 0.5f + mTextHeightOffset);
+
+            if (mStrokeWidth > 0) {
+                //外圍圓圈
+                canvas.drawRoundRect(new RectF(left, top, right, bottom), mStrokeRadius, mStrokeRadius, mStrokePaint);
+            }
+            //分隔線
+//        for (int i = 0; i < mTabNum - 1; i++) {
+//            canvas.drawLine(perWidth * (i + 1), top, perWidth * (i + 1), bottom, mStrokePaint);
+//        }
         }
     }
 
@@ -381,6 +382,15 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
             drawText(canvas, paint, tabText, (tabTextWidthX + getPaddingLeft()), mHeight * 0.5f + mTextHeightOffset);
             tabTextWidthX += (tabTextWidth + mStrokeWidth * 2 + getPaddingLeft() + getPaddingRight());
         }
+
+        if (mStrokeWidth > 0) {
+            //外圍圓圈
+            canvas.drawRoundRect(new RectF(left, top, tabTextWidthX, bottom), mStrokeRadius, mStrokeRadius, mStrokePaint);
+        }
+        //分隔線
+//        for (int i = 0; i < mTabNum - 1; i++) {
+//            canvas.drawLine(perWidth * (i + 1), top, perWidth * (i + 1), bottom, mStrokePaint);
+//        }
     }
 
     private void drawSquarePath(Canvas canvas, float top, float left, float bottom, float right, int i) {
