@@ -14,6 +14,7 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -38,6 +39,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
     private static final String FONTS_DIR = "fonts/";
     private static final BlockStyle BLOCK_STYLE = BlockStyle.ORIGINAL;
     private static final boolean MUTI_LINE = false;
+    private static final TabWidth TAB_WIDTH = TabWidth.AUTO;
 
     public enum BlockStyle {
         ORIGINAL(0),
@@ -58,6 +60,30 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
 
         public static BlockStyle fromId(int id) {
             for (BlockStyle type : values()) {
+                if (type.getValue() == id) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
+
+    public enum TabWidth {
+        MAX(0),
+        AUTO(1);
+
+        private int mValue;
+
+        TabWidth(int _value) {
+            this.mValue = _value;
+        }
+
+        public int getValue() {
+            return mValue;
+        }
+
+        public static TabWidth fromId(int id) {
+            for (TabWidth type : values()) {
                 if (type.getValue() == id) {
                     return type;
                 }
@@ -92,6 +118,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
     private Typeface typeface;
     private boolean mEnable = true;
     private BlockStyle mblockStyle = BlockStyle.ROUNDED;
+    private TabWidth mTabWidth = TabWidth.AUTO;
     private boolean mMutiLine = false; // 文字太長自動換行 UI設定app:mutiLine="true"即可
 
     private float mOffset; //滑动偏移量
@@ -135,6 +162,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
         mSelectedTab = typedArray.getInteger(R.styleable.MultSwitch_selectedTab, SELECTED_TAB);
         mMutiLine = typedArray.getBoolean(R.styleable.MultSwitch_mutiLine, MUTI_LINE);
         mblockStyle = BlockStyle.fromId(typedArray.getInteger(R.styleable.MultSwitch_blockStyle, BLOCK_STYLE.getValue()));
+        mTabWidth = TabWidth.fromId(typedArray.getInteger(R.styleable.MultSwitch_tabWidth, TAB_WIDTH.getValue()));
         String mTypeface = typedArray.getString(R.styleable.MultSwitch_typeface);
         int mSwitchTabsResId = typedArray.getResourceId(R.styleable.MultSwitch_switchTabs, 0);
         if (mSwitchTabsResId != 0) {
@@ -201,15 +229,23 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
     private int getDefaultWidth() {
         float tabTextWidth = 0f;
         int tabs = mTabTexts.length;
+        float totalTextWidth = 0f;
         for (int i = 0; i < tabs; i++) {
-            tabTextWidth = Math.max(tabTextWidth, mSelectedTextPaint.measureText(mTabTexts[i]));
+            switch (mTabWidth) {
+                case MAX:
+                default:
+                    tabTextWidth = Math.max(tabTextWidth, mSelectedTextPaint.measureText(mTabTexts[i]));
+                    totalTextWidth = tabTextWidth * tabs;
+                    break;
+                case AUTO:
+                    totalTextWidth += mSelectedTextPaint.measureText(mTabTexts[i]);
+                    break;
+            }
         }
-        float totalTextWidth = tabTextWidth * tabs;
         float totalStrokeWidth = (mStrokeWidth * tabs);
         int totalPadding = (getPaddingRight() + getPaddingLeft()) * tabs;
         return (int) (totalTextWidth + totalStrokeWidth + totalPadding);
     }
-
 
     /**
      * get expect size
@@ -252,15 +288,19 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
         float right = mWidth - mStrokeWidth * 0.5f;
         float bottom = mHeight - mStrokeWidth * 0.5f;
 
-        if (mStrokeWidth > 0) {
-            //外圍圓圈
-            canvas.drawRoundRect(new RectF(left, top, right, bottom), mStrokeRadius, mStrokeRadius, mStrokePaint);
-        }
-        //分隔線
-//        for (int i = 0; i < mTabNum - 1; i++) {
-//            canvas.drawLine(perWidth * (i + 1), top, perWidth * (i + 1), bottom, mStrokePaint);
-//        }
         //draw tab and line
+        switch (mTabWidth) {
+            case MAX:
+            default:
+                onDrawTabWidth_Max(canvas, left, top, right, bottom);
+                break;
+            case AUTO:
+                onDrawTabWidth_Auto(canvas, left, top, right, bottom);
+                break;
+        }
+    }
+
+    private void onDrawTabWidth_Max(Canvas canvas, float left, float top, float right, float bottom) {
         for (int i = 0; i < mTabNum; i++) {
             String tabText = mTabTexts[i];
             float tabTextWidth = mSelectedTextPaint.measureText(tabText);
@@ -269,18 +309,65 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
 //                draw selected tab
                 switch (mblockStyle) {
                     case BRIN:
-                        drawSquarePath(canvas, top, left, bottom, right, i);
+                        drawSquarePath(canvas, top, perWidth * i, bottom, perWidth * (i + 1), i);
                         break;
                     case ROUNDED:
                         drawPath(canvas, top, perWidth * i, bottom, perWidth * (i + 1));
                         break;
                     case BOTTOMLINE:
                         float indicatorTop = bottom - mIndicatorHeight;
-                        drawSquarePath(canvas, indicatorTop, left, bottom, right, i);
+                        drawPath(canvas, indicatorTop, perWidth * i, bottom, perWidth * (i + 1));
                         break;
                     case BOTTOMSHORTLINE:
                         float shortTop = bottom - mIndicatorHeight;
                         float shortLeft = (perWidth * i) + (perWidth - mIndicatorWidth) * 0.5f;
+                        float shortRight = shortLeft + mIndicatorWidth;
+                        drawPath(canvas, shortTop, shortLeft, bottom, shortRight);
+                        break;
+                }
+                // selected text
+                paint = mSelectedTextPaint;
+            } else {
+                // unselected text
+                paint = mUnselectedTextPaint;
+            }
+            drawText(canvas, paint, tabText, 0.5f * perWidth * (2 * i + 1) - 0.5f * tabTextWidth, mHeight * 0.5f + mTextHeightOffset);
+
+            if (mStrokeWidth > 0) {
+                //外圍圓圈
+                canvas.drawRoundRect(new RectF(left, top, right, bottom), mStrokeRadius, mStrokeRadius, mStrokePaint);
+            }
+            //分隔線
+//        for (int i = 0; i < mTabNum - 1; i++) {
+//            canvas.drawLine(perWidth * (i + 1), top, perWidth * (i + 1), bottom, mStrokePaint);
+//        }
+        }
+    }
+
+    private void onDrawTabWidth_Auto(Canvas canvas, float left, float top, float right, float bottom) {
+        float tabTextWidthX = 0f;
+        for (int i = 0; i < mTabNum; i++) {
+            String tabText = mTabTexts[i];
+            float tabTextWidth = mSelectedTextPaint.measureText(tabText);
+            float tabTextWidthStart = tabTextWidthX;
+            float tabTextWidthEnd = tabTextWidthX + (tabTextWidth + mStrokeWidth * 2 + getPaddingLeft() + getPaddingRight());
+            TextPaint paint;
+            if (i == mSelectedTab) {
+//                draw selected tab
+                switch (mblockStyle) {
+                    case BRIN:
+                        drawSquarePath(canvas, top, tabTextWidthStart, bottom, tabTextWidthEnd, i);
+                        break;
+                    case ROUNDED:
+                        drawPath(canvas, top, tabTextWidthStart, bottom, tabTextWidthEnd);
+                        break;
+                    case BOTTOMLINE:
+                        float indicatorTop = bottom - mIndicatorHeight;
+                        drawPath(canvas, indicatorTop, tabTextWidthStart, bottom, tabTextWidthEnd);
+                        break;
+                    case BOTTOMSHORTLINE:
+                        float shortTop = bottom - mIndicatorHeight;
+                        float shortLeft = (tabTextWidthEnd + tabTextWidthStart - mIndicatorWidth) * 0.5f;
                         float shortRight = shortLeft + mIndicatorWidth;
                         drawPath(canvas, shortTop, shortLeft, bottom, shortRight);
                         break;
@@ -292,17 +379,27 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
                 // unselected text
                 paint = mUnselectedTextPaint;
             }
-            drawText(canvas, paint, tabText, i, (int) tabTextWidth, getWidth() / mTabNum);
+            drawText(canvas, paint, tabText, (tabTextWidthX + getPaddingLeft()), mHeight * 0.5f + mTextHeightOffset);
+            tabTextWidthX += (tabTextWidth + mStrokeWidth * 2 + getPaddingLeft() + getPaddingRight());
         }
+
+        if (mStrokeWidth > 0) {
+            //外圍圓圈
+            canvas.drawRoundRect(new RectF(left, top, tabTextWidthX, bottom), mStrokeRadius, mStrokeRadius, mStrokePaint);
+        }
+        //分隔線
+//        for (int i = 0; i < mTabNum - 1; i++) {
+//            canvas.drawLine(perWidth * (i + 1), top, perWidth * (i + 1), bottom, mStrokePaint);
+//        }
     }
 
     private void drawSquarePath(Canvas canvas, float top, float left, float bottom, float right, int i) {
         if (i == 0) {
-            drawLeftPath(canvas, left, top, bottom);
+            drawLeftPath(canvas, left, top, right, bottom);
         } else if (i == mTabNum - 1) {
-            drawRightPath(canvas, top, right, bottom);
+            drawRightPath(canvas, left, top, right, bottom);
         } else {
-            canvas.drawRect(new RectF(perWidth * i, top, perWidth * (i + 1), bottom), mFillPaint);
+            canvas.drawRect(new RectF(left, top, right, bottom), mFillPaint);
         }
     }
 
@@ -330,11 +427,11 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
      * @param top
      * @param bottom
      */
-    private void drawLeftPath(Canvas canvas, float left, float top, float bottom) {
+    private void drawLeftPath(Canvas canvas, float left, float top, float right, float bottom) {
         Path leftPath = new Path();
         leftPath.moveTo(left + mStrokeRadius, top);
-        leftPath.lineTo(perWidth, top);
-        leftPath.lineTo(perWidth, bottom);
+        leftPath.lineTo(right, top);
+        leftPath.lineTo(right, bottom);
         leftPath.lineTo(left + mStrokeRadius, bottom);
         leftPath.arcTo(new RectF(left, bottom - 2 * mStrokeRadius, left + 2 * mStrokeRadius, bottom), 90, 90);
         leftPath.lineTo(left, top + mStrokeRadius);
@@ -350,11 +447,11 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
      * @param right
      * @param bottom
      */
-    private void drawRightPath(Canvas canvas, float top, float right, float bottom) {
+    private void drawRightPath(Canvas canvas, float left, float top, float right, float bottom) {
         Path rightPath = new Path();
         rightPath.moveTo(right - mStrokeRadius, top);
-        rightPath.lineTo(right - perWidth, top);
-        rightPath.lineTo(right - perWidth, bottom);
+        rightPath.lineTo(left, top);
+        rightPath.lineTo(left, bottom);
         rightPath.lineTo(right - mStrokeRadius, bottom);
         rightPath.arcTo(new RectF(right - 2 * mStrokeRadius, bottom - 2 * mStrokeRadius, right, bottom), 90, -90);
         rightPath.lineTo(right, top + mStrokeRadius);
@@ -362,18 +459,22 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
         canvas.drawPath(rightPath, mFillPaint);
     }
 
-    private void drawText(Canvas canvas, TextPaint paint, String text, int index, int textWidth, int tabWidth) {
-        // 有開啟換行且文字太長才換行 若文字太長不會換行則UI設定app:mutiLine="true"即可
-        if (mMutiLine && textWidth > tabWidth) {
-            StaticLayout layout = new StaticLayout(text, paint, tabWidth, Layout.Alignment.ALIGN_NORMAL, 1.0F, 0.0F, true);
-            canvas.save();
-            canvas.translate(0.5f * perWidth * (2 * index + 1) - 0.5f * layout.getLineWidth(0), 0);
-            layout.draw(canvas);
-            canvas.restore();
-        } else {
-            canvas.drawText(text, 0.5f * perWidth * (2 * index + 1) - 0.5f * textWidth, mHeight * 0.5f + mTextHeightOffset, paint);
-        }
+    private void drawText(Canvas canvas, TextPaint paint, String text, float x, float y) {
+        canvas.drawText(text, x, y, paint);
     }
+//
+//    private void drawText(Canvas canvas, TextPaint paint, String text, int index, int textWidth, int tabWidth) {
+//        // 有開啟換行且文字太長才換行 若文字太長不會換行則UI設定app:mutiLine="true"即可
+//        if (mMutiLine && textWidth > tabWidth) {
+//            StaticLayout layout = new StaticLayout(text, paint, tabWidth, Layout.Alignment.ALIGN_NORMAL, 1.0F, 0.0F, true);
+//            canvas.save();
+//            canvas.translate(0.5f * perWidth * (2 * index + 1) - 0.5f * layout.getLineWidth(0), 0);
+//            layout.draw(canvas);
+//            canvas.restore();
+//        } else {
+//            canvas.drawText(text, 0.5f * perWidth * (2 * index + 1) - 0.5f * textWidth, mHeight * 0.5f + mTextHeightOffset, paint);
+//        }
+//    }
 
     /**
      * called after onMeasure
@@ -414,15 +515,38 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
             float x = event.getX();
+            float tabTextWidthX = 0f;
             for (int i = 0; i < mTabNum; i++) {
-                if (x > perWidth * i && x < perWidth * (i + 1)) {
-                    if (mSelectedTab == i) {
-                        return true;
-                    }
-                    mSelectedTab = i;
-                    if (onSwitchListener != null) {
-                        onSwitchListener.onSwitch(i, mTabTexts[i]);
-                    }
+                switch (mTabWidth) {
+                    case MAX:
+                    default:
+                        if (x > perWidth * i && x < perWidth * (i + 1)) {
+                            if (mSelectedTab == i) {
+                                return true;
+                            }
+                            mSelectedTab = i;
+                            if (onSwitchListener != null) {
+                                onSwitchListener.onSwitch(i, mTabTexts[i]);
+                            }
+                        }
+                        break;
+                    case AUTO:
+                        String tabText = mTabTexts[i];
+                        float tabTextWidth = mSelectedTextPaint.measureText(tabText);
+                        float tabTextWidthStart = tabTextWidthX;
+                        float tabTextWidthEnd = tabTextWidthX + (tabTextWidth + mStrokeWidth * 2 + getPaddingLeft() + getPaddingRight());
+                        if (x > tabTextWidthStart && x < tabTextWidthEnd) {
+                            Log.i("TabWidth", "tabTextWidthStart=" + tabTextWidthStart + ", tabTextWidthEnd=" + tabTextWidthEnd + ", pos=" + i);
+                            if (mSelectedTab == i) {
+                                return true;
+                            }
+                            mSelectedTab = i;
+                            if (onSwitchListener != null) {
+                                onSwitchListener.onSwitch(i, mTabTexts[i]);
+                            }
+                        }
+                        tabTextWidthX = tabTextWidthEnd;
+                        break;
                 }
             }
             invalidate();
