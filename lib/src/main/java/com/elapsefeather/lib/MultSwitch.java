@@ -361,6 +361,10 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
                     case BOTTOMLINE:
                         break;
                     case BOTTOMSHORTLINE:
+                        float shortTop = bottom - mIndicatorHeight;
+                        float shortLeft = (tabTextWidthEnd + tabTextWidthStart - mIndicatorWidth) * 0.5f;
+                        float shortRight = shortLeft + mIndicatorWidth;
+                        drawPath(canvas, shortTop, shortLeft, bottom, shortRight);
                         break;
                 }
 
