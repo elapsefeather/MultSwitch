@@ -211,7 +211,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="isScroll"
+            android:text="isScroll=true, tabWidth=max"
             android:textSize="18dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -223,16 +223,17 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:padding="8dp"
-            app:blockStyle="rounded"
+            app:blockStyle="brim"
             app:isScroll="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/label6"
-            app:selectedColor="#9C27B0"
-            app:selectedTextColor="#fff"
+            app:selectedColor="#F44336"
+            app:selectedTextColor="#FFE391"
             app:strokeRadius="20dp"
             app:switchTabs="@array/tab2"
             app:tabWidth="max"
-            app:textSize="18dp" />
+            app:textSize="18dp"
+            app:unselectedTextColor="#FF5722" />
 
         <com.elapsefeather.lib.MultTabLayout
             android:id="@+id/multSwitch10"
@@ -240,16 +241,64 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:padding="8dp"
-            app:blockStyle="rounded"
+            app:blockStyle="bottomShortLine"
             app:isScroll="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/multSwitch9"
-            app:selectedColor="#7EBDEF"
+            app:selectedColor="#FFC5D8"
+            app:selectedTextColor="#E91E63"
+            app:strokeRadius="2dp"
+            app:switchTabs="@array/tab2"
+            app:tabWidth="max"
+            app:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/label7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="isScroll=true, tabWidth=auto"
+            android:textSize="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/multSwitch10" />
+
+        <com.elapsefeather.lib.MultTabLayout
+            android:id="@+id/multSwitch11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="8dp"
+            app:blockStyle="rounded"
+            app:isScroll="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label7"
+            app:selectedColor="#00BCD4"
             app:selectedTextColor="#fff"
             app:strokeRadius="20dp"
             app:strokeWidth="0dp"
             app:switchTabs="@array/tab2"
             app:tabWidth="auto"
-            app:textSize="18dp" />
+            app:textSize="18dp"
+            app:unselectedTextColor="#8BC34A" />
+
+        <com.elapsefeather.lib.MultTabLayout
+            android:id="@+id/multSwitch12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="8dp"
+            app:blockStyle="bottomLine"
+            app:isScroll="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/multSwitch11"
+            app:selectedColor="#3F51B5"
+            app:selectedTextColor="#7EBDEF"
+            app:strokeRadius="2dp"
+            app:strokeWidth="0dp"
+            app:switchTabs="@array/tab2"
+            app:tabWidth="auto"
+            app:textSize="18dp"
+            app:unselectedTextColor="#673AB7" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
