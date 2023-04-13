@@ -317,7 +317,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
 //                draw selected tab
                 switch (mblockStyle) {
                     case BRIN:
-                        drawSquarePath(canvas, top, left, bottom, right, i);
+                        drawSquarePath(canvas, top, perWidth * i, bottom, perWidth * (i + 1), i);
                         break;
                     case ROUNDED:
                         drawPath(canvas, top, perWidth * i, bottom, perWidth * (i + 1));
@@ -355,6 +355,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
 //                draw selected tab
                 switch (mblockStyle) {
                     case BRIN:
+                        drawSquarePath(canvas, top, tabTextWidthStart, bottom, tabTextWidthEnd, i);
                         break;
                     case ROUNDED:
                         drawPath(canvas, top, tabTextWidthStart, bottom, tabTextWidthEnd);
@@ -384,11 +385,11 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
 
     private void drawSquarePath(Canvas canvas, float top, float left, float bottom, float right, int i) {
         if (i == 0) {
-            drawLeftPath(canvas, left, top, bottom);
+            drawLeftPath(canvas, left, top, right, bottom);
         } else if (i == mTabNum - 1) {
-            drawRightPath(canvas, top, right, bottom);
+            drawRightPath(canvas, left, top, right, bottom);
         } else {
-            canvas.drawRect(new RectF(perWidth * i, top, perWidth * (i + 1), bottom), mFillPaint);
+            canvas.drawRect(new RectF(left, top, right, bottom), mFillPaint);
         }
     }
 
@@ -416,11 +417,11 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
      * @param top
      * @param bottom
      */
-    private void drawLeftPath(Canvas canvas, float left, float top, float bottom) {
+    private void drawLeftPath(Canvas canvas, float left, float top, float right, float bottom) {
         Path leftPath = new Path();
         leftPath.moveTo(left + mStrokeRadius, top);
-        leftPath.lineTo(perWidth, top);
-        leftPath.lineTo(perWidth, bottom);
+        leftPath.lineTo(right, top);
+        leftPath.lineTo(right, bottom);
         leftPath.lineTo(left + mStrokeRadius, bottom);
         leftPath.arcTo(new RectF(left, bottom - 2 * mStrokeRadius, left + 2 * mStrokeRadius, bottom), 90, 90);
         leftPath.lineTo(left, top + mStrokeRadius);
@@ -436,11 +437,11 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
      * @param right
      * @param bottom
      */
-    private void drawRightPath(Canvas canvas, float top, float right, float bottom) {
+    private void drawRightPath(Canvas canvas, float left, float top, float right, float bottom) {
         Path rightPath = new Path();
         rightPath.moveTo(right - mStrokeRadius, top);
-        rightPath.lineTo(right - perWidth, top);
-        rightPath.lineTo(right - perWidth, bottom);
+        rightPath.lineTo(left, top);
+        rightPath.lineTo(left, bottom);
         rightPath.lineTo(right - mStrokeRadius, bottom);
         rightPath.arcTo(new RectF(right - 2 * mStrokeRadius, bottom - 2 * mStrokeRadius, right, bottom), 90, -90);
         rightPath.lineTo(right, top + mStrokeRadius);
