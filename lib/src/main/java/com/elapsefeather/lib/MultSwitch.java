@@ -727,48 +727,4 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
             throw new IllegalArgumentException("the size of tagTexts should greater then 0");
         }
     }
-    /*======================================save and restore======================================*/
-
-    @Override
-    public Parcelable onSaveInstanceState() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("View", super.onSaveInstanceState());
-        bundle.putFloat("StrokeRadius", mStrokeRadius);
-        bundle.putFloat("StrokeWidth", mStrokeWidth);
-        bundle.putFloat("IndicatorHeight", mIndicatorHeight);
-        bundle.putFloat("IndicatorWidth", mIndicatorWidth);
-        bundle.putFloat("TextSize", mTextSize);
-        bundle.putInt("SelectedColor", mSelectedColor);
-        bundle.putInt("UnSelectedColor", mUnSelectedColor);
-        bundle.putInt("DisableColor", mDisableColor);
-        bundle.putInt("SelectedTextColor", mSelectedTextColor);
-        bundle.putInt("UnSelectedTextColor", mUnSelectedTextColor);
-        bundle.putInt("DisableTextColor", mDisableTextColor);
-        bundle.putInt("SelectedTab", mSelectedTab);
-        bundle.putBoolean("Enable", mEnable);
-        return bundle;
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        if (state instanceof Bundle) {
-            Bundle bundle = (Bundle) state;
-            mStrokeRadius = bundle.getFloat("StrokeRadius");
-            mStrokeWidth = bundle.getFloat("StrokeWidth");
-            mIndicatorHeight = bundle.getFloat("IndicatorHeight");
-            mIndicatorWidth = bundle.getFloat("IndicatorWidth");
-            mTextSize = bundle.getFloat("TextSize");
-            mSelectedColor = bundle.getInt("SelectedColor");
-            mUnSelectedColor = bundle.getInt("UnSelectedColor");
-            mDisableColor = bundle.getInt("DisableColor");
-            mSelectedTextColor = bundle.getInt("SelectedTextColor");
-            mUnSelectedTextColor = bundle.getInt("UnSelectedTextColor");
-            mDisableTextColor = bundle.getInt("DisableTextColor");
-            mSelectedTab = bundle.getInt("SelectedTab");
-            mEnable = bundle.getBoolean("Enable");
-            super.onRestoreInstanceState(bundle.getParcelable("View"));
-        } else {
-            super.onRestoreInstanceState(state);
-        }
-    }
 }
