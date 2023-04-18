@@ -42,7 +42,7 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.elapsefeather:MultSwitch:2.0.0'
+    implementation 'com.github.elapsefeather:MultSwitch:2.0.1'
 }
 ```
 
