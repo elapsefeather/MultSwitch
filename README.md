@@ -114,6 +114,9 @@ dependencies {
 
 ## Version History
 
+> ### v2.0.1(2023/04/18)
+> - 修正 IllegalArgumentException 
+
 > ### v2.0.0(2023/04/13)
 > - 增加可滑動設置
 > - 停止項目文字換行功能
