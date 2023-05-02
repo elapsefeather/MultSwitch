@@ -189,17 +189,17 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
         mFillPaint = new Paint();
         mFillPaint.setColor(mSelectedColor);
         mFillPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mStrokePaint.setAntiAlias(true);
+        mFillPaint.setAntiAlias(true);
         // selected text paint
         mSelectedTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mSelectedTextPaint.setTextSize(mTextSize);
         mSelectedTextPaint.setColor(mSelectedTextColor);
-        mStrokePaint.setAntiAlias(true);
+        mSelectedTextPaint.setAntiAlias(true);
         // unselected text paint
         mUnselectedTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mUnselectedTextPaint.setTextSize(mTextSize);
         mUnselectedTextPaint.setColor(mUnSelectedTextColor);
-        mStrokePaint.setAntiAlias(true);
+        mUnselectedTextPaint.setAntiAlias(true);
         mTextHeightOffset = -(mSelectedTextPaint.ascent() + mSelectedTextPaint.descent()) * 0.5f;
         mFontMetrics = mSelectedTextPaint.getFontMetrics();
         if (typeface != null) {
