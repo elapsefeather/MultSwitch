@@ -7,21 +7,19 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.text.Layout;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback;
 
-public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
+public class MultSwitch extends View {
 
     private static final String TAG = "MultSwitch";
     /*default value*/
@@ -125,6 +123,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
     private int lastValue = -1;
 
     private ViewPager.OnPageChangeListener mPageChangeListener;
+    private ViewPager2.OnPageChangeCallback mPage2ChangeListener;
 
     public MultSwitch(Context context) {
         this(context, null);
@@ -385,7 +384,7 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
 
         if (mStrokeWidth > 0) {
             //外圍圓圈
-            canvas.drawRoundRect(new RectF(left, top, tabTextWidthX, bottom), mStrokeRadius, mStrokeRadius, mStrokePaint);
+            canvas.drawRoundRect(new RectF(left, top, right, bottom), mStrokeRadius, mStrokeRadius, mStrokePaint);
         }
         //分隔線
 //        for (int i = 0; i < mTabNum - 1; i++) {
@@ -536,7 +535,6 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
                         float tabTextWidthStart = tabTextWidthX;
                         float tabTextWidthEnd = tabTextWidthX + (tabTextWidth + mStrokeWidth * 2 + getPaddingLeft() + getPaddingRight());
                         if (x > tabTextWidthStart && x < tabTextWidthEnd) {
-                            Log.i("TabWidth", "tabTextWidthStart=" + tabTextWidthStart + ", tabTextWidthEnd=" + tabTextWidthEnd + ", pos=" + i);
                             if (mSelectedTab == i) {
                                 return true;
                             }
@@ -568,6 +566,71 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
         return mEnable;
     }
 
+    public void setViewPager(ViewPager2 viewPager) {
+        if (viewPager == null) return;
+
+        RecyclerView.Adapter pagerAdapter = viewPager.getAdapter();
+        if (pagerAdapter == null) {
+            throw new RuntimeException("请先设置viewpager的adaper");
+        }
+
+        mTabNum = pagerAdapter.getItemCount();
+        viewPager.registerOnPageChangeCallback(vp2ChangeCallback);
+        mSelectedTab = viewPager.getCurrentItem();
+        invalidate();
+        this.setOnSwitchListener((position, tabText) -> {
+            viewPager.setCurrentItem(position, false);
+        });
+    }
+
+    /**
+     * 因为自定义控件注册了viewpager2的滑动监听，
+     * 为了外部能够同样监听到滑动事件，所以提供该接口
+     *
+     * @param onPageChangeCallback
+     */
+    public void setOnPageChangeListener(ViewPager2.OnPageChangeCallback onPageChangeCallback) {
+        this.mPage2ChangeListener = onPageChangeCallback;
+    }
+
+    OnPageChangeCallback vp2ChangeCallback = new OnPageChangeCallback() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            //允许显示滑动效果
+            mSelectedTab = position;
+
+            if (lastValue > positionOffsetPixels) {
+                // 递减，向右侧滑动
+                mOffset = -positionOffset;
+            } else if (lastValue < positionOffsetPixels) {
+                // 递减，向右侧滑动
+                mOffset = positionOffset;
+            }
+
+            //通知view重绘
+            invalidate();
+            if (mPage2ChangeListener != null) {
+                mPage2ChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            if (mPage2ChangeListener != null) {
+                mPage2ChangeListener.onPageSelected(position);
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+            if (mPage2ChangeListener != null) {
+                mPage2ChangeListener.onPageScrollStateChanged(state);
+            }
+        }
+    };
 
     public void setViewPager(ViewPager viewPager) {
         if (viewPager == null) {
@@ -578,11 +641,11 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
             throw new RuntimeException("请先设置viewpager的adaper");
         }
         mTabNum = pagerAdapter.getCount();
-        viewPager.addOnPageChangeListener(this);
+        viewPager.addOnPageChangeListener(vpChangeListener);
         mSelectedTab = viewPager.getCurrentItem();
         invalidate();
         this.setOnSwitchListener((position, tabText) -> {
-            viewPager.setCurrentItem(position, true);
+            viewPager.setCurrentItem(position, false);
         });
     }
 
@@ -596,39 +659,41 @@ public class MultSwitch extends View implements ViewPager.OnPageChangeListener {
         this.mPageChangeListener = pageChangeListener;
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        //允许显示滑动效果
-        mSelectedTab = position;
+    ViewPager.OnPageChangeListener vpChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            //允许显示滑动效果
+            mSelectedTab = position;
 
-        if (lastValue > positionOffsetPixels) {
-            // 递减，向右侧滑动
-            mOffset = -positionOffset;
-        } else if (lastValue < positionOffsetPixels) {
-            // 递减，向右侧滑动
-            mOffset = positionOffset;
+            if (lastValue > positionOffsetPixels) {
+                // 递减，向右侧滑动
+                mOffset = -positionOffset;
+            } else if (lastValue < positionOffsetPixels) {
+                // 递减，向右侧滑动
+                mOffset = positionOffset;
+            }
+
+            //通知view重绘
+            invalidate();
+            if (mPageChangeListener != null) {
+                mPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
         }
 
-        //通知view重绘
-        invalidate();
-        if (mPageChangeListener != null) {
-            mPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+        @Override
+        public void onPageSelected(int position) {
+            if (mPageChangeListener != null) {
+                mPageChangeListener.onPageSelected(position);
+            }
         }
-    }
 
-    @Override
-    public void onPageSelected(int position) {
-        if (mPageChangeListener != null) {
-            mPageChangeListener.onPageSelected(position);
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            if (mPageChangeListener != null) {
+                mPageChangeListener.onPageScrollStateChanged(state);
+            }
         }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        if (mPageChangeListener != null) {
-            mPageChangeListener.onPageScrollStateChanged(state);
-        }
-    }
+    };
     /*=========================================Interface=========================================*/
 
     /**

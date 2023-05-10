@@ -8,6 +8,7 @@ import android.widget.HorizontalScrollView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class MultTabLayout extends ConstraintLayout {
     private static final boolean IS_SCROLL = false;
@@ -55,10 +56,19 @@ public class MultTabLayout extends ConstraintLayout {
         return multSwitch.isEnabled();
     }
 
+    public void setViewPager(ViewPager2 viewPager) {
+        if (viewPager == null) return;
+        if (multSwitch == null) return;
+        multSwitch.setViewPager(viewPager);
+    }
+
+    public void setOnPageChangeListener(ViewPager2.OnPageChangeCallback onPageChangeCallback) {
+        if (multSwitch == null) return;
+        multSwitch.setOnPageChangeListener(onPageChangeCallback);
+    }
+
     public void setViewPager(ViewPager viewPager) {
-        if (viewPager == null) {
-            return;
-        }
+        if (viewPager == null) return;
         if (multSwitch == null) return;
         multSwitch.setViewPager(viewPager);
     }
@@ -66,21 +76,6 @@ public class MultTabLayout extends ConstraintLayout {
     public void setOnPageChangeListener(ViewPager.OnPageChangeListener pageChangeListener) {
         if (multSwitch == null) return;
         multSwitch.setOnPageChangeListener(pageChangeListener);
-    }
-
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        if (multSwitch == null) return;
-        multSwitch.onPageScrolled(position, positionOffset, positionOffsetPixels);
-    }
-
-    public void onPageSelected(int position) {
-        if (multSwitch == null) return;
-        multSwitch.onPageSelected(position);
-    }
-
-    public void onPageScrollStateChanged(int state) {
-        if (multSwitch == null) return;
-        multSwitch.onPageScrollStateChanged(state);
     }
 
     /*=========================================Interface=========================================*/
