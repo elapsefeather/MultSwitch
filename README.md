@@ -42,7 +42,7 @@ allprojects {
 
 ```gradle
 dependencies {
-    implementation 'com.github.elapsefeather:MultSwitch:2.0.1'
+    implementation 'com.github.elapsefeather:MultSwitch:2.0.2'
 }
 ```
 
@@ -113,6 +113,9 @@ dependencies {
 ```
 
 ## Version History
+
+> ### v2.0.2(2023/05/10)
+> - 支援 ViewPage2
 
 > ### v2.0.1(2023/04/18)
 > - 修正 IllegalArgumentException
