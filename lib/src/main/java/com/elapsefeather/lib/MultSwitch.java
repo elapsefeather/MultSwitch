@@ -97,7 +97,8 @@ public class MultSwitch extends View {
     private int mHeight;
     private TextPaint mSelectedTextPaint;
     private TextPaint mUnselectedTextPaint;
-    private OnSwitchListener onSwitchListener;
+    private OnSwitchListener mOnSwitchListener;
+    private OnScrollListener mOnScrollListener;
     private float mStrokeRadius;
     private float mStrokeWidth;
     private float mIndicatorHeight;
@@ -524,8 +525,8 @@ public class MultSwitch extends View {
                                 return true;
                             }
                             mSelectedTab = i;
-                            if (onSwitchListener != null) {
-                                onSwitchListener.onSwitch(i, mTabTexts[i]);
+                            if (mOnSwitchListener != null) {
+                                mOnSwitchListener.onSwitch(i, mTabTexts[i]);
                             }
                         }
                         break;
@@ -539,8 +540,8 @@ public class MultSwitch extends View {
                                 return true;
                             }
                             mSelectedTab = i;
-                            if (onSwitchListener != null) {
-                                onSwitchListener.onSwitch(i, mTabTexts[i]);
+                            if (mOnSwitchListener != null) {
+                                mOnSwitchListener.onSwitch(i, mTabTexts[i]);
                             }
                         }
                         tabTextWidthX = tabTextWidthEnd;
@@ -603,9 +604,13 @@ public class MultSwitch extends View {
             if (lastValue > positionOffsetPixels) {
                 // 递减，向右侧滑动
                 mOffset = -positionOffset;
+                if (mOnScrollListener != null)
+                    mOnScrollListener.onScroll(position, -positionOffset, -positionOffsetPixels);
             } else if (lastValue < positionOffsetPixels) {
                 // 递减，向右侧滑动
                 mOffset = positionOffset;
+                if (mOnScrollListener != null)
+                    mOnScrollListener.onScroll(position, positionOffset, positionOffsetPixels);
             }
 
             //通知view重绘
@@ -668,9 +673,13 @@ public class MultSwitch extends View {
             if (lastValue > positionOffsetPixels) {
                 // 递减，向右侧滑动
                 mOffset = -positionOffset;
+                if (mOnScrollListener != null)
+                    mOnScrollListener.onScroll(position, -positionOffset, -positionOffsetPixels);
             } else if (lastValue < positionOffsetPixels) {
                 // 递减，向右侧滑动
                 mOffset = positionOffset;
+                if (mOnScrollListener != null)
+                    mOnScrollListener.onScroll(position, positionOffset, positionOffsetPixels);
             }
 
             //通知view重绘
@@ -696,6 +705,14 @@ public class MultSwitch extends View {
     };
     /*=========================================Interface=========================================*/
 
+    public interface OnScrollListener {
+        void onScroll(int position, float positionOffset, int positionOffsetPixels);
+    }
+
+    public void setScrollListener(OnScrollListener onScrollListener) {
+        this.mOnScrollListener = onScrollListener;
+    }
+
     /**
      * called when swtiched
      */
@@ -703,8 +720,8 @@ public class MultSwitch extends View {
         void onSwitch(int position, String tabText);
     }
 
-    public MultSwitch setOnSwitchListener(OnSwitchListener onSwitchListener) {
-        this.onSwitchListener = onSwitchListener;
+    public MultSwitch setOnSwitchListener(OnSwitchListener mOnSwitchListener) {
+        this.mOnSwitchListener = mOnSwitchListener;
         return this;
     }
 
@@ -726,8 +743,8 @@ public class MultSwitch extends View {
     public MultSwitch setSelectedTab(int mSelectedTab) {
         this.mSelectedTab = mSelectedTab;
         invalidate();
-        if (onSwitchListener != null) {
-            onSwitchListener.onSwitch(mSelectedTab, mTabTexts[mSelectedTab]);
+        if (mOnSwitchListener != null) {
+            mOnSwitchListener.onSwitch(mSelectedTab, mTabTexts[mSelectedTab]);
         }
         return this;
     }

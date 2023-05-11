@@ -35,10 +35,14 @@ public class MultTabLayout extends ConstraintLayout {
         typedArray.recycle();
 
         multSwitch = new MultSwitch(context, attrs);
+
         if (mIsScroll) {
             HorizontalScrollView horizontalScrollView = new HorizontalScrollView(context);
             horizontalScrollView.addView(multSwitch);
             horizontalScrollView.setScrollBarSize(0);// 不需要滾動條
+            multSwitch.setScrollListener((int position, float positionOffset, int positionOffsetPixels) -> {
+                horizontalScrollView.scrollTo(positionOffsetPixels, 0);
+            });
             this.addView(horizontalScrollView);
         } else {
             this.addView(multSwitch, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
